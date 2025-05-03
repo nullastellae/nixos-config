@@ -4,8 +4,6 @@
     home-manager.users.sami = { pkgs, ... }: {
 
         home.packages = with pkgs; [
-            atool
-            httpie
             kitty
             pure-prompt
             kdePackages.kate
@@ -28,6 +26,15 @@
                 fpath+=(${pkgs.pure-prompt}/share/zsh/site-functions)
                 autoload -U promptinit; promptinit
                 prompt pure
+
+                nconf() {
+                    sudo nvim "$HOME/nixos-config/''${1:-configuration}.nix"
+                }
+                _nconf() {
+                    local -a nix_files=($HOME/nixos-config/*.nix(:t:r))
+                    _describe 'nix_files' nix_files
+                }
+                compdef _nconf nconf
             '';
 
 
@@ -36,8 +43,7 @@
 
                 hyconf = "sudo nvim ~/.config/hypr/hyprland.conf";
 
-                nconf = ''f() { sudo nvim ~/nixos-config/"$1".nix }; f'';
-
+                # nconf = "sudo nvim \"$HOME/nixos-config/\"\${1:-configuration}\".nix\"";
 
                 rebuild = "sudo nixos-rebuild switch";
                 UU = "sudo nixos-rebuild switch --upgrade";
