@@ -12,7 +12,9 @@
       ./packages.nix
       ./services.nix
       ./home.nix
-      <home-manager/nixos>
+	./desktop.nix
+	./unspkg.nix
+	<home-manager/nixos>
     ];
 
   # Enable flakes.

@@ -4,7 +4,6 @@
     home-manager.users.sami = { pkgs, ... }: {
 
         home.packages = with pkgs; [
-            kitty
             pure-prompt
             kdePackages.kate
             vscode
@@ -12,8 +11,38 @@
             discord
             insomnia
             postman
-        ];
+            spotify
+	    stremio
+            wofi
+            waybar
+            foot
+            kitty
+            hyprpolkitagent
+	    kdePackages.qtmultimedia
+	    qbittorrent
+		# gaming
+		prismlauncher
 
+		# programming stuff
+		gnumake 
+		gcc
+		cmake
+		staruml
+		binutils
+		sfml
+		
+		# sfml
+		freetype
+  		xorg.libX11
+  		xorg.xrandr
+  		libGL
+  		flac
+  		libogg
+  		libvorbis
+  		openal
+	];
+	
+	programs.bottom.enable = true;
 
         programs.zsh = {
             enable = true;
@@ -35,6 +64,19 @@
                     _describe 'nix_files' nix_files
                 }
                 compdef _nconf nconf
+
+                # Config checker
+                check() {
+                  find "''${1:-$HOME/nixos-config}" -name "*.nix" | while read -r file; do
+                    echo "Checking: $file"
+                    if nix-instantiate --eval "$file" >/dev/null 2>&1; then
+                      echo "  [PASS]"
+                    else
+                      echo "  [FAIL]"
+                      nix-instantiate --eval --show-trace "$file" 2>&1 | sed 's/^/    /'
+                    fi
+                  done
+                }
             '';
 
 
